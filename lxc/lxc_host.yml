@@ -1,0 +1,32 @@
+---
+# ubuntu specific
+# installs lxc
+# configures a bridge br0 <-> eth0
+# creates a container
+# setup the lxc host
+# to move to a lxc_host tasklist
+- name: install lxc
+  action: apt pkg=lxc state=installed
+- name: get lxc a home
+  action: file state=directory path=/home/lxc
+- name: create lxclib
+  action: file state=directory path=/home/lxc/lxclib
+- name: create lxccache
+  action: file state=directory path=/home/lxc/lxccache
+- name: link lxclib
+  action: |
+    file src=/home/lxc/lxclib dest=/var/lib/lxc
+    owner=root group=root state=link force=yes
+- name: link lxccache
+  action: |
+    file src=/home/lxc/lxccache dest=/var/cache/lxc
+    owner=root group=root state=link force=yes
+- name: setup bridge br0 <-> eth0
+  action: |
+    copy src=lxc/interfaces_ubuntu dest=/etc/network/interfaces
+    owner=root group=root mode=644 backup=yes
+  notify: restart network
+- name: change lxc.conf defaults to br0
+  action: |
+    copy src=lxc/lxc_br0.conf dest=/etc/lxc/lxc.conf
+    owner=root group=root mode=644 backup=yes
