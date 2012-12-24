@@ -1,0 +1,24 @@
+{% set item = sites[name] %}
+{% set names = item.names %}
+{% set name = item.name %}
+server {
+    client_max_body_size 5m;
+    listen 80;
+    server_name {% for n in names %} {{n}} {% endfor %};
+ 
+    access_log {{www_root}}/logs/nginx_access_{{name}}.log;
+    error_log {{www_root}}/logs/nginx_error_{{name}}.log;
+ 
+    root {{www_root}}/{{name}}/blog/html;
+    index index.html;
+
+    if ( $http_host ~ .*.{{name}}) {
+       rewrite ^/(.*)$ http://{{name}}/$1;
+    }
+    # serve static files directly
+    location ~* ^.+\.(jpg|jpeg|gif|css|png|js|ico)$ {
+        access_log        off;
+        expires           30d;
+    }
+}
+

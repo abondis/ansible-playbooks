@@ -1,0 +1,7 @@
+---
+- template: |
+    src=webservers/nginx.static.j2
+    dest=/etc/nginx/sites-enabled/${sites.${name}.name}.conf
+  tags:
+    - static
+  notify: restart nginx

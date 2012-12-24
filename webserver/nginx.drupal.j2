@@ -1,0 +1,59 @@
+{% set item = sites[name] %}
+{% set names = item.names %}
+{% set name = item.name %}
+server {
+    client_max_body_size 5m;
+    listen 80;
+    server_name {% for n in names %} {{n}} {% endfor %};
+ 
+    access_log {{www_root}}/logs/nginx_access_{{name}}.log;
+    error_log {{www_root}}/logs/nginx_error_{{name}}.log;
+ 
+    root {{www_root}}/drupal{{item.dp_vers}}/;
+    index index.php;
+
+    if ( $http_host ~ .*.{{name}}) {
+       rewrite ^/(.*)$ http://{{name}}/$1;
+    }
+    if (!-e $request_filename) {
+        rewrite ^/(.*)$ /index.php?q=$1 last;
+    }
+ 
+    error_page 404 index.php;
+ 
+    # hide protected files
+    location ~* \.(engine|install|inc|info|module|profile|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)$|^(code-style\.pl|Entries.*|Repository|Root|Tag|Template)$ {
+      deny all;
+    }
+ 
+    # hide backup_migrate files
+    location ~* ^/files/backup_migrate {
+      deny all;
+    }
+ 
+    # serve static files directly
+    location ~* ^.+\.(jpg|jpeg|gif|css|png|js|ico)$ {
+        access_log        off;
+        expires           30d;
+    }  
+ 
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param  SCRIPT_FILENAME   $document_root$fastcgi_script_name;
+        fastcgi_param  QUERY_STRING     $query_string;
+        fastcgi_param  REQUEST_METHOD   $request_method;
+        fastcgi_param  CONTENT_TYPE     $content_type;
+        fastcgi_param  CONTENT_LENGTH   $content_length;
+    }
+
+#  Disable after installation
+#  location = {{www_root}}/drupal{{item.dp_vers}}/install.php {
+#    include /etc/nginx/fastcgi_params;
+#    fastcgi_param SCRIPT_FILENAME drupal/install.php;
+#    fastcgi_param QUERY_STRING q=$uri&$args;
+#    fastcgi_pass unix:/var/run/php5-fpm.sock;
+#  }
+
+}
+
