@@ -1,0 +1,31 @@
+---
+packages:
+  - nginx
+  - php5
+  - php5-fpm
+  - git
+  - php5-gd
+  - php5-mysql
+  - php5-mcrypt
+  - php-apc
+  - php-pear
+  - php-console-table
+  - mysql-server
+  - python-mysqldb
+  - unattended-upgrades
+# remove some default packages
+uninst:
+  - apache2
+  - apache2-doc
+  - apache2-mpm-prefork
+  - apache2-utils
+  - apache2.2-bin
+  - apache2.2-common
+  - bsd-mailx
+  - rmail
+  - sendmail
+  - sendmail-base
+  - sendmail-bin
+  - sendmail-cf
+  - sendmail-doc
+  - sensible-mda

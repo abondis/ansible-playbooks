@@ -1,0 +1,9 @@
+---
+# Create a db for a specific site
+- mysql_user: |
+    name=${site.db_user} password=${site.db_pass}
+    priv=${site.db_user}.*:ALL
+    login_user=root login_password=$db_root_pass
+- mysql_db: |
+    name=${site.db_user}
+    login_user=root login_password=$db_root_pass

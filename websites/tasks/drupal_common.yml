@@ -1,0 +1,17 @@
+---
+# Install drupal base for 6 and 7
+- action: file state=directory path=$www_root/.ssh mode=0700
+- action: copy src=websites/user1_rsa dest=$www_root/.ssh/id_rsa mode=0600
+- action: copy src=websites/user1_rsa.pub dest=$www_root/.ssh/id_rsa.pub mode=0600
+- action: |
+    git repo=git://drupalcode.org/project/drupal.git
+    dest=$www_root/drupal6 version=6.26 force=yes
+  #ignore_errors: True
+  tags:
+    - deploy
+- action: |
+    git repo=git://drupalcode.org/project/drupal.git
+    dest=$www_root/drupal7 version=7.15 force=yes
+  #ignore_errors: True
+  tags:
+    - deploy

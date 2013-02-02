@@ -1,0 +1,22 @@
+---
+- git: |
+    repo=git@somegit.re.po:${site.name}
+    dest=$www_root/drupal${site.dp_vers}/sites/${site.name}
+    version=${site.version} force=yes
+- template: |
+    src=websites/settings.j2
+    dest=$www_root/drupal${site.dp_vers}/sites/${site.name}/settings.php
+#TODO: fix baseurl
+- command: |
+    drush make 
+    --no-core
+    --contrib-destination=./
+    ./makefile ./
+    chdir=$www_root/drupal${site.dp_vers}/sites/${site.name}/
+  ignore_errors: True
+- file: |
+    src=$www_root/drupal${site.dp_vers}/sites/${site.name}
+    dest=$www_root/drupal${site.dp_vers}/sites/${item}
+    state=link
+  with_items: ${site.names}
+  only_if: "'${site.name}' != '${item}'"

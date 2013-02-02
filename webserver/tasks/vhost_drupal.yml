@@ -1,0 +1,5 @@
+---
+- template: |
+    src=webservers/templates/nginx.drupal.j2
+    dest=/etc/nginx/sites-enabled/${sites.${name}.name}.conf
+  notify: restart nginx

@@ -1,0 +1,18 @@
+---
+- action: apt pkg=$item state=removed
+  with_items: $uninst
+- action: apt pkg=$item state=installed
+  with_items: $packages
+- action: copy src=webservers/files/php-fpm.conf dest=/etc/php5/fpm/php-fpm.conf mode=0440
+  notify: restart php-fpm
+# crypt.crypt("""Ch4ngeM3!""", '$1$S0S4lty')
+# setup a user
+- action: user1|
+    user name=deploy password='$1$S0S4lty$ebhroO7AGQpOF0Ride6Tp0'
+    home=$www_root 
+# logs path
+- action: file path=$www_root/logs owner=www-data state=directory
+- action: file path=$www_root owner=user1 state=directory
+# setup drupal env
+- action: file path=$www_root/drupal6 owner=user1 state=directory
+- action: file path=$www_root/drupal7 owner=user1 state=directory
