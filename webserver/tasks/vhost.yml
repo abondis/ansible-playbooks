@@ -1,7 +1,6 @@
 ---
 - template: |
-    src=webservers/nginx.static.j2
+    src=webservers/templates/nginx.drupal.j2
     dest=/etc/nginx/sites-enabled/${sites.${name}.name}.conf
-  tags:
-    - static
+    state=$state
   notify: restart nginx

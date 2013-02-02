@@ -3,7 +3,7 @@
   with_items: $uninst
 - action: apt pkg=$item state=installed
   with_items: $packages
-- action: copy src=webservers/php-fpm.conf dest=/etc/php5/fpm/php-fpm.conf mode=0440
+- action: copy src=webservers/files/php-fpm.conf dest=/etc/php5/fpm/php-fpm.conf mode=0440
   notify: restart php-fpm
 # crypt.crypt("""Ch4ngeM3!""", '$1$S0S4lty')
 # setup a user
