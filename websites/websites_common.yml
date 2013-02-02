@@ -1,6 +1,0 @@
----
-- file: state=directory path=$www_root/.ssh mode=0700 owner=user1
-- copy: src=websites/user1_rsa dest=$www_root/.ssh/id_rsa mode=0600 owner=user1
-- copy: src=websites/user1_rsa.pub dest=$www_root/.ssh/id_rsa.pub mode=0600 owner=user1
-- authorized_key: user=user1 key="$FILE(/ssh_keys_pool/id_rsa.pub)"
-  name: Adding my ssh key to user1 user
